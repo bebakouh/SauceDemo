@@ -1,5 +1,3 @@
-# SauceDemo Testautomatisierung
-
 ## Übersicht
 
 Dieses Projekt enthält eine automatisierte Testlösung für die E-Commerce-Plattform **SauceDemo**.
@@ -207,3 +205,31 @@ Mögliche zukünftige Erweiterungen:
 - Framework: Playwright
 - Programmiersprache: TypeScript
 - Architektur: Page Object Model (POM)
+
+# Ergänzung
+
+| Tool	| Zweck |
+|---------|--------------|
+| Playwright	| Automatisierung der Webtests
+| ESLint	| Überprüfung der Codequalität und Einhaltung von Coding Standards
+| Prettier	| Einheitliche Formatierung des Quellcodes
+| Husky	| Automatische Ausführung von Prüfungen vor jedem Git-Commit
+| GitHub Actions	| Automatische Ausführung der Tests im Rahmen der CI/CD-Pipeline
+
+---
+# CI/CD
+- GitHub Actions wird für die automatische Ausführung der Testpipeline verwendet.
+- Die Pipeline startet automatisch bei jedem Push und Pull Request auf den main-Branch.
+- Die benötigten Abhängigkeiten und Playwright-Browser werden automatisch installiert.
+- Anschließend werden alle Playwright-Tests ausgeführt.
+
+# Reporting
+- Playwright erstellt automatisch einen HTML-Testreport. 
+- Der Report wird nach jedem Workflow-Lauf als GitHub-Artifact gespeichert und kann heruntergeladen werden.
+- --> Letzter Report: https://github.com/bebakouh/SauceDemo/actions/runs/29518693578/artifacts/8383808236
+
+# Stabilität und Wartbarkeit
+- Verwendung von npm ci für reproduzierbare Installationen.
+- Klare Trennung der einzelnen Pipeline-Schritte.
+- Automatische Ausführung bei Codeänderungen.
+- Playwright-Browser werden in der Pipeline automatisch installiert.
