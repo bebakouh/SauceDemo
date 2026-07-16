@@ -1,37 +1,35 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class CartPage {
+  readonly page: Page;
 
-    readonly page: Page;
+  readonly cartItem: Locator;
+  readonly continueShoppingButton: Locator;
+  readonly checkoutButton: Locator;
+  readonly cartTitle: Locator;
 
-    readonly cartItem: Locator;
-    readonly continueShoppingButton: Locator;
-    readonly checkoutButton: Locator;
-    readonly cartTitle: Locator;
+  constructor(page: Page) {
+    this.page = page;
 
-    constructor(page: Page) {
+    this.cartTitle = page.locator('.title');
+    this.cartItem = page.locator('.cart_item');
+    this.continueShoppingButton = page.locator('#continue-shopping');
+    this.checkoutButton = page.locator('#checkout');
+  }
 
-        this.page = page;
+  async openCart() {
+    await this.page.locator('.shopping_cart_link').click();
+  }
 
-        this.cartTitle = page.locator('.title');
-        this.cartItem = page.locator('.cart_item');
-        this.continueShoppingButton = page.locator('#continue-shopping');
-        this.checkoutButton = page.locator('#checkout');
-    }
+  async clickContinueShopping() {
+    await this.continueShoppingButton.click();
+  }
 
-    async openCart() {
-        await this.page.locator('.shopping_cart_link').click();
-    }
+  async clickCheckout() {
+    await this.checkoutButton.click();
+  }
 
-    async clickContinueShopping() {
-        await this.continueShoppingButton.click();
-    }
-
-    async clickCheckout() {
-        await this.checkoutButton.click();
-    }
-
-    async verifyCartLoaded() {
-        await expect(this.cartTitle).toHaveText('Your Cart');
-    }
+  async verifyCartLoaded() {
+    await expect(this.cartTitle).toHaveText('Your Cart');
+  }
 }

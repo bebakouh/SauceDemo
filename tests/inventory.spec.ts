@@ -3,63 +3,45 @@ import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 
 test.describe('Phase 2 - Produkte Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://www.saucedemo.com/');
 
-    test.beforeEach(async ({ page }) => {
+    const loginPage = new LoginPage(page);
 
-        await page.goto('https://www.saucedemo.com/');
+    await loginPage.login('standard_user', 'secret_sauce');
+  });
 
-        const loginPage = new LoginPage(page);
+  test('TF-PRODUKT-001 - Produktliste wird angezeigt', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-        await loginPage.login(
-            'standard_user',
-            'secret_sauce'
-        );
+    await expect(page).toHaveURL(/inventory.html/);
 
-    });
+    await inventory.verifyInventoryLoaded();
+  });
 
-    test('TF-PRODUKT-001 - Produktliste wird angezeigt', async ({ page }) => {
+  test('TF-PRODUKT-002 - Produkt zum Warenkorb hinzufügen', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-        const inventory = new InventoryPage(page);
+    await inventory.addBackpackToCart();
 
-        await expect(page).toHaveURL(/inventory.html/);
+    await expect(inventory.backpackRemoveButton).toBeVisible();
+  });
 
-        await inventory.verifyInventoryLoaded();
+  test('TF-PRODUKT-003 - Produkt aus dem Warenkorb entfernen', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-    });
+    await inventory.addBackpackToCart();
 
-    test('TF-PRODUKT-002 - Produkt zum Warenkorb hinzufügen', async ({ page }) => {
+    await inventory.removeBackpackFromCart();
 
-        const inventory = new InventoryPage(page);
+    await expect(inventory.backpackAddButton).toBeVisible();
+  });
 
-        await inventory.addBackpackToCart();
+  test('TF-PRODUKT-004 - Warenkorb-Badge zählt korrekt', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-        await expect(inventory.backpackRemoveButton)
-            .toBeVisible();
+    await inventory.addBackpackToCart();
 
-    });
-
-    test('TF-PRODUKT-003 - Produkt aus dem Warenkorb entfernen', async ({ page }) => {
-
-        const inventory = new InventoryPage(page);
-
-        await inventory.addBackpackToCart();
-
-        await inventory.removeBackpackFromCart();
-
-        await expect(inventory.backpackAddButton)
-            .toBeVisible();
-
-    });
-
-    test('TF-PRODUKT-004 - Warenkorb-Badge zählt korrekt', async ({ page }) => {
-
-        const inventory = new InventoryPage(page);
-
-        await inventory.addBackpackToCart();
-
-        await expect(inventory.cartBadge)
-            .toHaveText('1');
-
-    });
-
+    await expect(inventory.cartBadge).toHaveText('1');
+  });
 });

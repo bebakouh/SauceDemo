@@ -5,124 +5,64 @@ import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
 import { CheckoutPage } from '../pages/CheckoutPage';
 
-
 test.describe('End-to-End Purchase Flow', () => {
+  test('E2E-001 - Kunde Kann die Bestellung erfolgreich abschließen', async ({ page }) => {
+    // Website aufrufen
 
+    await page.goto('https://www.saucedemo.com/');
 
-    test('E2E-001 - Kunde Kann die Bestellung erfolgreich abschließen', async ({ page }) => {
+    // Login erfolgreich
 
-        // Website aufrufen
-        
+    const loginPage = new LoginPage(page);
 
-        await page.goto('https://www.saucedemo.com/');
+    await loginPage.login('standard_user', 'secret_sauce');
 
+    await expect(page).toHaveURL(/inventory.html/);
 
-        // Login erfolgreich 
+    // Produkt hinzufügen
 
-        const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
 
+    await inventoryPage.addBackpackToCart();
 
-        await loginPage.login(
-            'standard_user',
-            'secret_sauce'
-        );
+    await expect(inventoryPage.backpackRemoveButton).toBeVisible();
 
+    // Warenkorb
 
-        await expect(page)
-            .toHaveURL(/inventory.html/);
+    const cartPage = new CartPage(page);
 
+    await cartPage.openCart();
 
+    await expect(cartPage.cartItem).toHaveCount(1);
 
-        // Produkt hinzufügen 
+    await expect(page.locator('.inventory_item_name')).toHaveText('Sauce Labs Backpack');
 
-        const inventoryPage = new InventoryPage(page);
+    // Checkout
 
+    await cartPage.clickCheckout();
 
-        await inventoryPage.addBackpackToCart();
+    await expect(page).toHaveURL(/checkout-step-one.html/);
 
+    // Kundendaten eingeben
 
-        await expect(
-            inventoryPage.backpackRemoveButton
-        ).toBeVisible();
+    const checkoutPage = new CheckoutPage(page);
 
+    await checkoutPage.fillCheckoutInformation('Test', 'Testing', '41065');
 
-        // Warenkorb
+    await expect(page).toHaveURL(/checkout-step-two.html/);
 
-        const cartPage = new CartPage(page);
+    // Order Übersicht
 
+    await expect(page.locator('.inventory_item_name')).toHaveText('Sauce Labs Backpack');
 
-        await cartPage.openCart();
+    // Bestellung abschließen
 
+    await checkoutPage.finishCheckout();
 
-        await expect(cartPage.cartItem)
-            .toHaveCount(1);
+    // Bestätigung
 
+    await expect(page).toHaveURL(/checkout-complete.html/);
 
-        await expect(
-            page.locator('.inventory_item_name')
-        )
-        .toHaveText('Sauce Labs Backpack');
-
-
-
-        // Checkout
-    
-
-        await cartPage.clickCheckout();
-
-
-        await expect(page)
-            .toHaveURL(/checkout-step-one.html/);
-
-
-
-        // Kundendaten eingeben 
-
-        const checkoutPage = new CheckoutPage(page);
-
-
-        await checkoutPage.fillCheckoutInformation(
-            'Test',
-            'Testing',
-            '41065'
-        );
-
-
-        await expect(page)
-            .toHaveURL(/checkout-step-two.html/);
-
-
-
-        // Order Übersicht 
-
-        await expect(
-            page.locator('.inventory_item_name')
-        )
-        .toHaveText('Sauce Labs Backpack');
-
-
-
-
-        // Bestellung abschließen 
-
-        await checkoutPage.finishCheckout();
-
-
-
-        // Bestätigung
-
-        await expect(page)
-            .toHaveURL(/checkout-complete.html/);
-
-
-        await expect(
-            checkoutPage.completeTitle
-        )
-        .toHaveText(
-            'Thank you for your order!'
-        );
-
-
-    });
-
+    await expect(checkoutPage.completeTitle).toHaveText('Thank you for your order!');
+  });
 });

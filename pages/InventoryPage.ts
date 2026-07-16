@@ -1,64 +1,59 @@
 import { expect, Locator, Page } from '@playwright/test';
 
 export class InventoryPage {
+  readonly page: Page;
 
-    readonly page: Page;
+  readonly inventoryList: Locator;
+  readonly inventoryItems: Locator;
+  readonly cartBadge: Locator;
 
-    readonly inventoryList: Locator;
-    readonly inventoryItems: Locator;
-    readonly cartBadge: Locator;
+  readonly backpackAddButton: Locator;
+  readonly backpackRemoveButton: Locator;
 
-    readonly backpackAddButton: Locator;
-    readonly backpackRemoveButton: Locator;
+  readonly sortDropdown: Locator;
+  readonly itemNames: Locator;
+  readonly itemPrices: Locator;
 
-    readonly sortDropdown: Locator;
-    readonly itemNames: Locator;
-    readonly itemPrices: Locator;
+  constructor(page: Page) {
+    this.page = page;
 
-    constructor(page: Page) {
+    this.inventoryList = page.locator('.inventory_list');
+    this.inventoryItems = page.locator('.inventory_item');
 
-        this.page = page;
+    this.backpackAddButton = page.locator('#add-to-cart-sauce-labs-backpack');
+    this.backpackRemoveButton = page.locator('#remove-sauce-labs-backpack');
 
-        this.inventoryList = page.locator('.inventory_list');
-        this.inventoryItems = page.locator('.inventory_item');
+    this.cartBadge = page.locator('.shopping_cart_badge');
 
-        this.backpackAddButton = page.locator('#add-to-cart-sauce-labs-backpack');
-        this.backpackRemoveButton = page.locator('#remove-sauce-labs-backpack');
+    this.sortDropdown = page.locator('[data-test="product-sort-container"]');
+    this.itemNames = page.locator('.inventory_item_name');
+    this.itemPrices = page.locator('.inventory_item_price');
+  }
 
-        this.cartBadge = page.locator('.shopping_cart_badge');
+  async addBackpackToCart() {
+    await this.backpackAddButton.click();
+  }
 
-        this.sortDropdown = page.locator('[data-test="product-sort-container"]');
-        this.itemNames = page.locator('.inventory_item_name');
-        this.itemPrices = page.locator('.inventory_item_price');
-    }
+  async removeBackpackFromCart() {
+    await this.backpackRemoveButton.click();
+  }
 
-    async addBackpackToCart() {
-        await this.backpackAddButton.click();
-    }
+  async verifyInventoryLoaded() {
+    await expect(this.inventoryList).toBeVisible();
+    await expect(this.inventoryItems).toHaveCount(6);
+  }
 
-    async removeBackpackFromCart() {
-        await this.backpackRemoveButton.click();
-    }
+  async sortBy(option: string) {
+    await this.sortDropdown.selectOption(option);
+  }
 
-    async verifyInventoryLoaded() {
-        await expect(this.inventoryList).toBeVisible();
-        await expect(this.inventoryItems).toHaveCount(6);
-    }
+  async getProductNames(): Promise<string[]> {
+    return await this.itemNames.allTextContents();
+  }
 
-    async sortBy(option: string) {
-        await this.sortDropdown.selectOption(option);
-    }
+  async getProductPrices(): Promise<number[]> {
+    const prices = await this.itemPrices.allTextContents();
 
-    async getProductNames(): Promise<string[]> {
-        return await this.itemNames.allTextContents();
-    }
-
-    async getProductPrices(): Promise<number[]> {
-
-        const prices = await this.itemPrices.allTextContents();
-
-        return prices.map(price =>
-            Number(price.replace('$', ''))
-        );
-        }
+    return prices.map((price) => Number(price.replace('$', '')));
+  }
 }

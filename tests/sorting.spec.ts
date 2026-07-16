@@ -3,70 +3,58 @@ import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 
 test.describe('Phase 5 - Sorting Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('https://www.saucedemo.com/');
 
-    test.beforeEach(async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.login('standard_user', 'secret_sauce');
+  });
 
-        await page.goto('https://www.saucedemo.com/');
+  test('TF-SORT-001 - Sort Name A-Z', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-        const login = new LoginPage(page);
-        await login.login('standard_user', 'secret_sauce');
+    await inventory.sortBy('az');
 
-    });
+    const names = await inventory.getProductNames();
 
-    test('TF-SORT-001 - Sort Name A-Z', async ({ page }) => {
+    const expected = [...names].sort();
 
-        const inventory = new InventoryPage(page);
+    expect(names).toEqual(expected);
+  });
 
-        await inventory.sortBy('az');
+  test('TF-SORT-002 - Sort Name Z-A', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-        const names = await inventory.getProductNames();
+    await inventory.sortBy('za');
 
-        const expected = [...names].sort();
+    const names = await inventory.getProductNames();
 
-        expect(names).toEqual(expected);
+    const expected = [...names].sort().reverse();
 
-    });
+    expect(names).toEqual(expected);
+  });
 
-    test('TF-SORT-002 - Sort Name Z-A', async ({ page }) => {
+  test('TF-SORT-003 - Sort Preis aufsteigend', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-        const inventory = new InventoryPage(page);
+    await inventory.sortBy('lohi');
 
-        await inventory.sortBy('za');
+    const prices = await inventory.getProductPrices();
 
-        const names = await inventory.getProductNames();
+    const expected = [...prices].sort((a, b) => a - b);
 
-        const expected = [...names].sort().reverse();
+    expect(prices).toEqual(expected);
+  });
 
-        expect(names).toEqual(expected);
+  test('TF-SORT-004 - Sort Preis absteigend', async ({ page }) => {
+    const inventory = new InventoryPage(page);
 
-    });
+    await inventory.sortBy('hilo');
 
-    test('TF-SORT-003 - Sort Preis aufsteigend', async ({ page }) => {
+    const prices = await inventory.getProductPrices();
 
-        const inventory = new InventoryPage(page);
+    const expected = [...prices].sort((a, b) => b - a);
 
-        await inventory.sortBy('lohi');
-
-        const prices = await inventory.getProductPrices();
-
-        const expected = [...prices].sort((a, b) => a - b);
-
-        expect(prices).toEqual(expected);
-
-    });
-
-    test('TF-SORT-004 - Sort Preis absteigend', async ({ page }) => {
-
-        const inventory = new InventoryPage(page);
-
-        await inventory.sortBy('hilo');
-
-        const prices = await inventory.getProductPrices();
-
-        const expected = [...prices].sort((a, b) => b - a);
-
-        expect(prices).toEqual(expected);
-
-    });
-
+    expect(prices).toEqual(expected);
+  });
 });
