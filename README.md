@@ -203,7 +203,7 @@ Mögliche zukünftige Erweiterungen:
 
 # Projektinformationen
 
-Projekt: SauceDemo 
-Framework: Playwright
-Programmiersprache: TypeScript
-Architektur: Page Object Model (POM)
+- Projekt: SauceDemo
+- Framework: Playwright
+- Programmiersprache: TypeScript
+- Architektur: Page Object Model (POM)
