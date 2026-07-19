@@ -233,3 +233,43 @@ Mögliche zukünftige Erweiterungen:
 - Klare Trennung der einzelnen Pipeline-Schritte.
 - Automatische Ausführung bei Codeänderungen.
 - Playwright-Browser werden in der Pipeline automatisch installiert.
+
+# Projektstruktur BDD
+Die Tests wurden nach dem BDD-Ansatz strukturiert:
+
+features
+│
+├── login.feature
+├── products.feature
+├── cart.feature
+├── checkout.feature
+│
+├── step-definitions
+│   ├── login.steps.ts
+│   ├── products.steps.ts
+│   ├── cart.steps.ts
+│   └── checkout.steps.ts
+│
+└── support
+    ├── world.ts
+    └── hooks.ts
+
+Für die Ergebnisdarstellung wird das integrierte Cucumber HTML Reporting verwendet.
+
+Abgedeckte BDD Szenarien
+Login
+- Erfolgreicher Login
+Produkte
+- Produktliste anzeigen
+- Produkt zum Warenkorb hinzufügen
+- Produkt entfernen
+- Warenkorb Badge prüfen
+Warenkorb
+- Produkt vorhanden
+- Zur Produktübersicht zurückkehren
+- Checkout starten
+Checkout
+- Pflichtfelder prüfen
+- Bestellung erfolgreich abschließen
+- Übersicht prüfen
+- Bestellung bestätigen
