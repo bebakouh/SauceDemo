@@ -24,6 +24,15 @@ export default defineConfig([
       semi: ['warn', 'always'],
     },
   },
+  {
+    files: ['cucumber.js'],
+    languageOptions: {
+      globals: {
+        module: 'readonly',
+        require: 'readonly',
+      },
+    },
+  },
 
   tseslint.configs.recommended,
 ]);

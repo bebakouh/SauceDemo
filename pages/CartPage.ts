@@ -7,6 +7,7 @@ export class CartPage {
   readonly continueShoppingButton: Locator;
   readonly checkoutButton: Locator;
   readonly cartTitle: Locator;
+  readonly itemName: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -15,6 +16,7 @@ export class CartPage {
     this.cartItem = page.locator('.cart_item');
     this.continueShoppingButton = page.locator('#continue-shopping');
     this.checkoutButton = page.locator('#checkout');
+    this.itemName = this.page.locator('.inventory_item_name');
   }
 
   async openCart() {

@@ -32,6 +32,14 @@ export class CheckoutPage {
     this.completeTitle = page.locator('.complete-header');
   }
 
+  async startCheckout() {
+    await this.page.locator('#checkout').click();
+  }
+
+  async clickContinue() {
+    await this.continueButton.click();
+  }
+
   async fillCheckoutInformation(firstName: string, lastName: string, postalCode: string) {
     await this.firstName.fill(firstName);
     await this.lastName.fill(lastName);

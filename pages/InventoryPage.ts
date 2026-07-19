@@ -56,4 +56,15 @@ export class InventoryPage {
 
     return prices.map((price) => Number(price.replace('$', '')));
   }
+  async addProduct(productName: string) {
+    const button = this.page.locator(`#add-to-cart-${productName.toLowerCase().replaceAll(' ', '-')}`);
+
+    await button.click();
+  }
+
+  async removeProduct(productName: string) {
+    const button = this.page.locator(`#remove-${productName.toLowerCase().replaceAll(' ', '-')}`);
+
+    await button.click();
+  }
 }
